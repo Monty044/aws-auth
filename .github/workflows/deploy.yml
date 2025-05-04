@@ -26,11 +26,12 @@ jobs:
         with:
           application_name: ${{ secrets.EB_APP_NAME }}
           environment_name: ${{ secrets.EB_ENV_NAME }}
-          version_label: ${{ github.sha }}
           region: ${{ secrets.AWS_REGION }}
+          version_label: ${{ github.sha }}
           bucket_name: ${{ secrets.S3_BUCKET }}
           bucket_key: user-management-cloud-${{ github.sha }}.jar
           deployment_package: target/user-management-cloud-0.0.1-SNAPSHOT.jar
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+          # 🔑 add these two:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
