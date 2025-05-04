@@ -1,0 +1,14 @@
+# Maven
+/target/
+/.mvn/
+/pom.xml.tag
+/log/
+/build/
+/.DS_Store
+
+# IDE
+/.idea/
+/*.iml
+
+# Env
+.env

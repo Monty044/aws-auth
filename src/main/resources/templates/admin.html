@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1>Admin page</h1>
+    <p>
+        Hello, <strong th:text="\${username}">user</strong>!
+        <a th:href="@{/logout}">Logout</a>
+    </p>
+    <h2>Your attributes</h2>
+    <pre th:text="\${#json.toJson(attributes)}"></pre>
+    <p><a th:href="@{/}">Back to home</a></p>
+</body>
+</html>
