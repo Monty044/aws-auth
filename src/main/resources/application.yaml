@@ -25,3 +25,4 @@ spring:
 
 server:
   port: ${PORT:5000}
+  forward-headers-strategy: native   # <‑‑ tells Spring to use the X‑Forwarded headers
