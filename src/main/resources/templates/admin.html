@@ -12,7 +12,7 @@
         <a th:href="@{/logout}">Logout</a>
     </p>
     <h2>Your attributes</h2>
-    <pre th:text="${#json.toJson(attributes)}"></pre>
+    <pre th:text="${attributes}"></pre>
     <p><a th:href="@{/}">Back to home</a></p>
 </body>
 </html>
