@@ -7,12 +7,12 @@
 </head>
 <body>
     <h1>Welcome to the public homepage</h1>
-    <p th:if="\${username != null}">
-        Logged in as <strong th:text="\${username}">user</strong> |
+    <p th:if="${username != null}">
+        Logged in as <strong th:text="${username}">user</strong> |
         <a th:href="@{/logout}">Logout</a> |
         <a th:href="@{/admin}">Admin page</a>
     </p>
-    <p th:if="\${username == null}">
+    <p th:if="${username == null}">
         <a th:href="@{/oauth2/authorization/github}">Login with GitHub</a> |
         <a th:href="@{/oauth2/authorization/google}">Login with Google</a>
     </p>

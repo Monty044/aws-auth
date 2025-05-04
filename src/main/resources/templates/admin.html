@@ -8,11 +8,11 @@
 <body>
     <h1>Admin page</h1>
     <p>
-        Hello, <strong th:text="\${username}">user</strong>!
+        Hello, <strong th:text="${username}">user</strong>!
         <a th:href="@{/logout}">Logout</a>
     </p>
     <h2>Your attributes</h2>
-    <pre th:text="\${#json.toJson(attributes)}"></pre>
+    <pre th:text="${#json.toJson(attributes)}"></pre>
     <p><a th:href="@{/}">Back to home</a></p>
 </body>
 </html>
