@@ -28,10 +28,12 @@ jobs:
           environment_name: ${{ secrets.EB_ENV_NAME }}
           region: ${{ secrets.AWS_REGION }}
           version_label: ${{ github.sha }}
-          bucket_name: ${{ secrets.S3_BUCKET }}
-          bucket_key: user-management-cloud-${{ github.sha }}.jar
+
+          # (optional) point at *your* bucket – or delete these two lines and let the
+          # action upload to the default elasticbeanstalk‑region‑account bucket.
+          existing_bucket_name: ${{ secrets.S3_BUCKET }}
           deployment_package: target/user-management-cloud-0.0.1-SNAPSHOT.jar
 
-          # 🔑 add these two:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # 🔑 new parameter names
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
