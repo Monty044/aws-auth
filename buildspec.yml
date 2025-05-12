@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+    commands:
+      - echo "Installing Maven"
+      - mvn -B -q --update-snapshots dependency:go-offline
+  build:
+    commands:
+      - echo "Building the project"
+      - mvn -B package -DskipTests
+  post_build:
+    commands:
+      - echo "Uploading package to S3"
+      - aws s3 cp target/user-management-cloud-0.0.1-SNAPSHOT.jar s3://$ARTIFACTS_BUCKET/$CODEBUILD_BUILD_NUMBER.jar
+      - echo "Calling EB to create new application version"
+      - aws elasticbeanstalk create-application-version \
+        --application-name $EB_APP \
+        --version-label $CODEBUILD_BUILD_NUMBER \
+        --source-bundle S3Bucket=$ARTIFACTS_BUCKET,S3Key=$CODEBUILD_BUILD_NUMBER.jar
+      - aws elasticbeanstalk update-environment \
+        --environment-name $EB_ENV \
+        --version-label $CODEBUILD_BUILD_NUMBER
+artifacts:
+  files:
+    - target/user-management-cloud-0.0.1-SNAPSHOT.jar
