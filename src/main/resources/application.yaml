@@ -24,5 +24,9 @@ spring:
           user-name-attribute: sub
 
 server:
-  port: ${PORT:5000}            # what you already have
+  port: ${PORT:8080}            # what you already have
   forward-headers-strategy: native   # <‑‑ add this line
+
+login:
+  log:
+    bucket: ${LOGIN_LOG_BUCKET}
