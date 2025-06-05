@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CLOUDWATCH" class="ca.pjer.logback.awslogs.AwsLogsAppender">
+        <logGroupName>${LOG_GROUP_NAME:-aws-auth-demo}</logGroupName>
+        <logStreamName>${LOG_STREAM_NAME:-application}</logStreamName>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CLOUDWATCH" />
+    </root>
+</configuration>

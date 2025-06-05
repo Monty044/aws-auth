@@ -69,10 +69,28 @@
     </dependency>
 
 
+    <!-- PostgreSQL driver for production profile -->
     <dependency>
-      <groupId>com.mysql</groupId>
-      <artifactId>mysql-connector-j</artifactId>
-      <scope>runtime</scope>   <!-- or omit <scope> if you prefer 'compile' -->
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- AWS SDK dependencies used for S3 login logging and CloudWatch -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>cloudwatch</artifactId>
+    </dependency>
+
+    <!-- Logback appender to push logs to CloudWatch -->
+    <dependency>
+      <groupId>ca.pjer</groupId>
+      <artifactId>logback-awslogs-appender</artifactId>
+      <version>1.6.0</version>
     </dependency>
 
 

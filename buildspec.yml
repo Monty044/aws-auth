@@ -8,6 +8,8 @@ phases:
       - mvn -B -q --update-snapshots dependency:go-offline
   build:
     commands:
+      - echo "Running tests"
+      - mvn -B test -Dspring.profiles.active=test
       - echo "Building the project"
       - mvn -B package -DskipTests
   post_build:
