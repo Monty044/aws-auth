@@ -1,29 +1,36 @@
 version: 0.2
+
 phases:
   install:
     runtime-versions:
-      java: corretto21
+      java: corretto21        # or “java: openjdk11” if you prefer
     commands:
-      - echo "Installing Maven"
+      - echo "Installing Maven dependencies in offline mode"
       - mvn -B -q --update-snapshots dependency:go-offline
+
   build:
     commands:
-      - echo "Running tests"
+      - echo "Running unit tests under the TEST profile"
       - mvn -B test -Dspring.profiles.active=test
-      - echo "Building the project"
+      - echo "Building the project (skip tests)"
       - mvn -B package -DskipTests
+
   post_build:
     commands:
-      - echo "Uploading package to S3"
+      - echo "Build completed on `date`"
+      # Ladda upp JAR till S3 eller Elastic Beanstalk (se nedan under AWS‐delen)
+      - echo "Uploading artifact to S3"
       - aws s3 cp target/user-management-cloud-0.0.1-SNAPSHOT.jar s3://$ARTIFACTS_BUCKET/$CODEBUILD_BUILD_NUMBER.jar
-      - echo "Calling EB to create new application version"
+      - echo "Creating new EB application version"
       - aws elasticbeanstalk create-application-version \
         --application-name $EB_APP \
         --version-label $CODEBUILD_BUILD_NUMBER \
         --source-bundle S3Bucket=$ARTIFACTS_BUCKET,S3Key=$CODEBUILD_BUILD_NUMBER.jar
+      - echo "Updating EB environment to new version"
       - aws elasticbeanstalk update-environment \
         --environment-name $EB_ENV \
         --version-label $CODEBUILD_BUILD_NUMBER
+
 artifacts:
   files:
     - target/user-management-cloud-0.0.1-SNAPSHOT.jar

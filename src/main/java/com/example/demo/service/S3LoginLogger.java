@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -19,6 +23,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class S3LoginLogger {
+
+    private static final Logger log = LoggerFactory.getLogger(S3LoginLogger.class);
 
     private final S3Client s3Client;
     private final String bucketName;
@@ -41,7 +47,7 @@ public class S3LoginLogger {
                                 .bucket(bucketName)
                                 .key(key)
                                 .build(),
-                        ResponseBytes.toByteArray());
+                        ResponseTransformer.toBytes());
                 existing = resp.asByteArray();
             } catch (NoSuchKeyException e) {
                 // ignore - new file will be created
@@ -55,7 +61,7 @@ public class S3LoginLogger {
                             .build(),
                     RequestBody.fromBytes(out.toByteArray()));
         } catch (IOException e) {
-            // in production you would log this
+            log.warn("Failed to log login to S3", e);
         }
     }
 }
