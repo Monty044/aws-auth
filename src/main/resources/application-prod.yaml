@@ -1,11 +1,12 @@
+# src/main/resources/application-prod.yml
 spring:
   profiles: prod
 
   datasource:
-    url: ${DATASOURCE_URL}
+    url: jdbc:postgresql://user-management-prod-db.cp8uygu64ie5.eu-north-1.rds.amazonaws.com:5432/postgres
+    username: monty04
+    password: Jagjag123
     driver-class-name: org.postgresql.Driver
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -16,8 +17,6 @@ server:
   port: ${SERVER_PORT:5000}
 
 login:
-  log:
-    bucket: ${LOGIN_LOG_BUCKET}
-
+  bucket: ${LOGIN_LOG_BUCKET}       # your S3 bucket for login logs
 cloudwatch:
-  log-group-name: ${LOG_GROUP_NAME}
+  log-group-name: ${LOG_GROUP_NAME}  # your CloudWatch log group
