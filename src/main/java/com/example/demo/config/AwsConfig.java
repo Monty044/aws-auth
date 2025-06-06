@@ -13,14 +13,14 @@ public class AwsConfig {
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "eu-north-1")))
+                .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "us-east-1")))
                 .build();
     }
 
     @Bean
     public CloudWatchClient cloudWatchClient() {
         return CloudWatchClient.builder()
-                .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "eu-north-1")))
+                .region(Region.of(System.getenv().getOrDefault("AWS_REGION", "us-east-1")))
                 .build();
     }
 }
