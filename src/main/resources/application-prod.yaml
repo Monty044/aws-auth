@@ -3,9 +3,9 @@ spring:
   profiles: prod
 
   datasource:
-    url: jdbc:postgresql://user-management-prod-db.cp8uygu64ie5.eu-north-1.rds.amazonaws.com:5432/myapp
-    username: monty04
-    password: ${DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
