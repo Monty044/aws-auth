@@ -1,11 +1,9 @@
-# buildspec.yml
 version: 0.2
 
 phases:
   install:
     runtime-versions:
-      # Switch to Java 17, because our pom.xml / annotation processors /
-      # Lombok versions are written for Java 17.
+      # Switch to Java 17 to match your pom.xml / Lombok, etc.
       java: corretto17
     commands:
       - echo "Installing Maven dependencies in offline mode"
@@ -23,12 +21,11 @@ phases:
     commands:
       - echo "Build completed on `date`"
       - echo "Uploading JAR to S3 artifact bucket"
-      # ↪ Make sure ARTIFACTS_BUCKET is defined in your CodeBuild env vars
+      # Make sure ARTIFACTS_BUCKET is set as a CodeBuild environment variable
       - aws s3 cp target/user-management-cloud-0.0.1-SNAPSHOT.jar s3://$ARTIFACTS_BUCKET/$CODEBUILD_BUILD_NUMBER.jar
 
       - echo "Creating new Elastic Beanstalk application version"
-      # ↪ Make sure EB_APP (your EB application name) is defined
-      #    and EB_ENV (your EB environment name) is defined.
+      # Make sure EB_APP and EB_ENV are both set as CodeBuild environment variables
       - aws elasticbeanstalk create-application-version \
         --application-name $EB_APP \
         --version-label $CODEBUILD_BUILD_NUMBER \
