@@ -1,32 +1,42 @@
+# buildspec.yml
 version: 0.2
 
 phases:
   install:
     runtime-versions:
-      java: corretto21        # or “java: openjdk11” if you prefer
+      # Match this to whatever JDK version your pom.xml expects.
+      # If your pom.xml uses <java.version>21</java.version>, use corretto21.
+      # If it uses Java 17, use “corretto17” instead.
+      java: corretto21
     commands:
       - echo "Installing Maven dependencies in offline mode"
       - mvn -B -q --update-snapshots dependency:go-offline
 
   build:
     commands:
-      - echo "Running unit tests under the TEST profile"
+      - echo "Running unit tests under the TEST profile (H2)"
       - mvn -B test -Dspring.profiles.active=test
-      - echo "Building the project (skip tests)"
-      - mvn -B package -DskipTests
+
+      - echo "Building production JAR (skip tests, use 'prod' profile)"
+      # ← Notice we explicitly add -Dspring.profiles.active=prod so that
+      # Spring Boot will bind to application‐prod.yml (pointing at RDS, etc).
+      - mvn -B package -DskipTests -Dspring.profiles.active=prod
 
   post_build:
     commands:
       - echo "Build completed on `date`"
-      # Ladda upp JAR till S3 eller Elastic Beanstalk (se nedan under AWS‐delen)
-      - echo "Uploading artifact to S3"
+      - echo "Uploading JAR to S3 artifact bucket"
+      # → $ARTIFACTS_BUCKET must be set in your CodeBuild environment variables.
       - aws s3 cp target/user-management-cloud-0.0.1-SNAPSHOT.jar s3://$ARTIFACTS_BUCKET/$CODEBUILD_BUILD_NUMBER.jar
-      - echo "Creating new EB application version"
+
+      - echo "Creating new Elastic Beanstalk application version"
+      # → $EB_APP and $EB_ENV must also be defined as CodeBuild env vars.
       - aws elasticbeanstalk create-application-version \
         --application-name $EB_APP \
         --version-label $CODEBUILD_BUILD_NUMBER \
         --source-bundle S3Bucket=$ARTIFACTS_BUCKET,S3Key=$CODEBUILD_BUILD_NUMBER.jar
-      - echo "Updating EB environment to new version"
+
+      - echo "Updating Elastic Beanstalk environment to new version"
       - aws elasticbeanstalk update-environment \
         --environment-name $EB_ENV \
         --version-label $CODEBUILD_BUILD_NUMBER
