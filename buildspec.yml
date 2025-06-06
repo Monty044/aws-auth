@@ -3,7 +3,6 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      # Switch to Java 17 to match your pom.xml / Lombok, etc.
       java: corretto17
     commands:
       - echo "Installing Maven dependencies in offline mode"
@@ -21,20 +20,15 @@ phases:
     commands:
       - echo "Build completed on `date`"
       - echo "Uploading JAR to S3 artifact bucket"
-      # Make sure ARTIFACTS_BUCKET is set as a CodeBuild environment variable
+      # Make sure ARTIFACTS_BUCKET is set in CodeBuild env vars (e.g. user-login-logs-bucket)
       - aws s3 cp target/user-management-cloud-0.0.1-SNAPSHOT.jar s3://$ARTIFACTS_BUCKET/$CODEBUILD_BUILD_NUMBER.jar
 
       - echo "Creating new Elastic Beanstalk application version"
-      # Make sure EB_APP and EB_ENV are both set as CodeBuild environment variables
-      - aws elasticbeanstalk create-application-version \
-        --application-name $EB_APP \
-        --version-label $CODEBUILD_BUILD_NUMBER \
-        --source-bundle S3Bucket=$ARTIFACTS_BUCKET,S3Key=$CODEBUILD_BUILD_NUMBER.jar
+      # Collapse into one line so $EB_APP and $CODEBUILD_BUILD_NUMBER get interpolated
+      - aws elasticbeanstalk create-application-version --application-name $EB_APP --version-label $CODEBUILD_BUILD_NUMBER --source-bundle S3Bucket=$ARTIFACTS_BUCKET,S3Key=$CODEBUILD_BUILD_NUMBER.jar
 
       - echo "Updating Elastic Beanstalk environment to new version"
-      - aws elasticbeanstalk update-environment \
-        --environment-name $EB_ENV \
-        --version-label $CODEBUILD_BUILD_NUMBER
+      - aws elasticbeanstalk update-environment --environment-name $EB_ENV --version-label $CODEBUILD_BUILD_NUMBER
 
 artifacts:
   files:
