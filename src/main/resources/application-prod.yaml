@@ -1,6 +1,7 @@
-# src/main/resources/application-prod.yml
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
 
   datasource:
     url: jdbc:postgresql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
@@ -17,6 +18,7 @@ server:
   port: ${SERVER_PORT:5000}
 
 login:
-  bucket: ${LOGIN_LOG_BUCKET}       # your S3 bucket for login logs
+  bucket: ${LOGIN_LOG_BUCKET}
+
 cloudwatch:
-  log-group-name: ${LOG_GROUP_NAME}  # your CloudWatch log group
+  log-group-name: ${LOG_GROUP_NAME}
